@@ -1,6 +1,7 @@
+import { Configuration } from '@nuxt/types'
 const colors = require('vuetify/es5/util/colors').default
 
-module.exports = {
+const config: Configuration = {
   mode: 'universal',
   /*
    ** Headers of the page
@@ -37,7 +38,8 @@ module.exports = {
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxt/typescript-build'
   ],
   /*
    ** Nuxt.js modules
@@ -82,3 +84,5 @@ module.exports = {
     extend(config, ctx) {}
   }
 }
+
+export default config
