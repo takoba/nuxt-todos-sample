@@ -1,75 +1,67 @@
 <template>
-  <v-layout column justify-center align-center>
-    <v-flex xs12 sm8 md6>
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
-      </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for
-            Vue.js. It was designed to empower developers to create amazing
-            applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a href="https://vuetifyjs.com" target="_blank"> documentation </a>.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a href="https://chat.vuetifyjs.com/" target="_blank" title="chat">
-              discord </a
-            >.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing
-            more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3" />
-          <a href="https://nuxtjs.org/" target="_blank">
-            Nuxt Documentation
-          </a>
-          <br />
-          <a href="https://github.com/nuxt/nuxt.js" target="_blank">
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire">
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-flex>
-  </v-layout>
+  <v-container>
+    <h1>Todoリスト</h1>
+    <v-row>
+      <v-col cols="6">
+        <ul>
+          <li v-for="(todo, i) in todos" :key="i">
+            <v-row justify="center" align="center">
+              <v-col cols="1">
+                <v-checkbox
+                  :checked="todo.done"
+                  @change="toggle(todo)"
+                ></v-checkbox>
+              </v-col>
+              <v-col>
+                <span :class="{ done: todo.done }">{{ todo.text }}</span>
+              </v-col>
+              <v-col cols="2">
+                <v-btn small @click="remove(todo)">削除</v-btn>
+              </v-col>
+            </v-row>
+          </li>
+          <li>
+            <v-text-field placeholder="Todo を入力" @keyup.enter="addTodo" />
+          </li>
+        </ul>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
-<script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+<script lang="ts">
+import Vue from 'vue'
 
-export default {
-  components: {
-    Logo,
-    VuetifyLogo
+import { Todo } from '~/models/Todo'
+import { todosStore } from '~/store'
+
+// OptionsAPI で記述
+export default Vue.extend({
+  computed: {
+    todos(): Array<Todo> {
+      return todosStore.todos
+    }
+  },
+  methods: {
+    addTodo(e): void {
+      todosStore.add(e.target.value)
+      e.target.value = ''
+    },
+    remove(todo: Todo) {
+      todosStore.remove(todo)
+    },
+    toggle(todo: Todo) {
+      todosStore.toggle(todo)
+    }
+  }
+})
+</script>
+
+<style scoped lang="scss">
+li {
+  list-style: none;
+  .done {
+    text-decoration: line-through;
   }
 }
-</script>
+</style>
